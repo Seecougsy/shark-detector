@@ -4,27 +4,48 @@ This app uses a YOLOv8s model trained on aerial images to detect sharks in real-
 ## Project Overview
 
 - Team Project @ Torrens University
-- Collected and cleaned a large aerial marine dataset using public sources on found on 
 
-- Applied image augmentation via Roboflow to improve generalisation and reduce overfitting
+- Built as a real-time marine threat detection tool deployable via drones
 
-- Trained a YOLOv8s object detection model and exported the best-performing .pt file
+- Dataset consisted of aerial marine footage featuring sharks, swimmers, surfers, dolphins, and empty ocean scenes
 
-- Integrated the trained model into a demo application using Streamlit
+- Cleaned and labelled images using Roboflow, including manual annotation
 
-- Intended for deployment on drones to support beach safety
+- Applied data augmentation (flip, shear, crop, etc.) to reduce overfitting and improve generalisation
+
+- Trained YOLOv8s in Google Colab using a high-performance A100 GPU
+
+- Model performance tracked via mAP, precision, and recall – reaching up to 0.96 mAP@0.5
+
+- Exported the best weights as best.pt and integrated into a Streamlit demo application
 
 ## Background
-Developed as part of a university group project, this application demonstrates the practical use of AI and computer vision for public safety. The aim was to build a real-time marine threat detection tool deployable via drones, focusing on Australia's beaches so that.
+Developed as part of a university capstone project, this application demonstrates the use of AI and computer vision for public safety. It supports early shark detection from aerial drone footage with the goal of assisting lifeguards and emergency response teams.
 
 
-## Model Training
-We used publicly available aerial datasets and trained a custom object detection model using Roboflow and Ultralytics YOLOv8. Training involved:
 
-- Data annotation and image augmentation
-- Model training, evaluation, and tuning
-- Exporting the final model as `best.pt`
+## The Dataset
+We used a custom dataset combining open-source aerial footage and custom footage. Noise images (e.g., surfers, dolphins, background) were added to reduce false positives.
+Data was split into 70% training, 20% validation, 10% testing.
+![Image Augmentation used](Screenshots/data_augmentation.png)
 
+
+
+## Training the Model
+The notebook [Model_training_notebook.ipynb](Model_training/Model_training_notebook.ipynb) contains the full training pipeline used before integrating the model weights into the application. The model was trained using: 
+
+- YOLOv8s from Ultralytics
+- Google Colab + A100 GPU
+- Roboflow for dataset management and augmentation
+- 60 epochs with batch size 64
+- Input resolution upscaled to 960×960 for final models
+
+**Key metrics (best run):**
+
+- mAP@0.5: 0.960
+- Precision: 0.955
+- Recall: 0.909
+ 
 
 ## Running the App
 
@@ -39,5 +60,12 @@ python -m streamlit run shark.py
 Your default browser should automatically open the app. If not, copy the URL shown in CMD/Terminal and paste it into your browser.
 
 ### Requirements
-
+- Python 3.9+
+- Streamlit
+- Ultralytics
+- OpenCV
+- Roboflow
 ## Notes
+- This is a proof-of-conceopt and not production ready
+- Intended for educational demonstration and not operational
+- All data used to trained the model was publically sourced/ open licence.
