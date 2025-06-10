@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+body {
+    background-color: #eaf3f8 !important;
+    font-family: 'Poppins', sans-serif !important;
+    color: #011627 !important;
+}
+
+/* === Title Box === */
+.title-box {
+    background: linear-gradient(to right, #003f66, #005f8f);
+    border-radius: 20px 20px 0 0;
+    text-align: center;
+    padding: 2em 1.5em 1.5em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    margin-bottom: 1.5em;
+    width: 100%;
+}
+
+.custom-title {
+    color: white;
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 0.3em;
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.subtitle {
+    color: #dff6ff !important;
+    font-size: 1.1em !important;
+    font-weight: 400 !important;
+    margin-top: 0.5em !important;
+    font-family: 'Poppins', sans-serif !important;
+    opacity: 0.95;
+}
+
+/* === Slider Label === */
+.slider-label {
+    font-size: 1.1em !important;
+    font-weight: 600 !important;
+    color: #011627 !important;
+    background-color: white !important;
+    padding: 0.6em 1em !important;
+    border-radius: 8px !important;
+    margin: 1em 0 1em 0 !important;
+    display: block !important;
+    font-family: 'Poppins', sans-serif !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* === Section Box (e.g. Detection Mode) === */
+.section-box {
+    background-color: #f0f6fa;
+    border-radius: 8px;
+    padding: 1.2em 1.5em;
+    margin: 1.5em 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    color: #011627;
+    text-align: left;
+}
+
+/* === Section Title & Subtitle === */
+.section-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    margin-bottom: 0.2em;
+    font-family: 'Poppins', sans-serif;
+    color: #003f66;
+}
+
+.section-subtitle {
+    font-size: 1em;
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
+    color: #4b6a81;
+}
+
+/* === Detection Boxes for Columns === */
+.mini-box {
+    background-color: #ffffff;
+    padding: 1em;
+    border-radius: 6px;
+    margin-bottom: 1em;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.mini-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #003f66;
+}
+
+.mini-subtitle {
+    font-size: 0.95em;
+    font-weight: 400;
+    color: #4b6a81;
+    margin-top: 0.3em;
+}
+
+/* === Streamlit Buttons === */
+.stButton > button {
+    background-color: #00b4d8 !important;
+    color: white !important;
+    border-radius: 10px !important;
+    padding: 0.6em 1.4em !important;
+    font-weight: 600 !important;
+    font-size: 1em !important;
+    transition: 0.3s ease-in-out;
+    border: none !important;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.stButton > button:hover {
+    background-color: #0077b6 !important;
+    transform: translateY(-1px);
+}
+
+/* === Material Icons === */
+.section-icon {
+    vertical-align: middle;
+    font-size: 1.6em;
+    margin-right: 0.4em;
+    color: #003f66;
+}
