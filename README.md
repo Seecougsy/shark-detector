@@ -1,4 +1,4 @@
-# Shark Detector - Real-time shark detection
+![Project Banner YOLOv8 Shark Detecter](Screenshots/shark-detector-02.png)
 
 This app uses a YOLOv8s model trained on aerial images to detect sharks in real-time video and static photos, showing bounding boxes and confidence scores.
 
