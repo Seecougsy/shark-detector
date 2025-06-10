@@ -1,8 +1,15 @@
 # Shark Detector - Real-time shark detection
 This app uses a YOLOv8s model trained on aerial images to detect sharks in real-time video and static photos, showing bounding boxes and confidence scores.
+![Shark Detector App](Screenshots/detector-app2.png)
+*Shark Detector Application.*
+
+![Shark Detector App](Screenshots/shark-found.png)
+*The Output.*
+
+
+
 
 ## Project Overview
-
 - Team Project @ Torrens University
 - Built as a real-time marine threat detection tool deployable via drones
 - Dataset consisted of aerial marine footage featuring sharks, swimmers, surfers, dolphins, and empty ocean scenes
@@ -16,12 +23,10 @@ This app uses a YOLOv8s model trained on aerial images to detect sharks in real-
 Developed as part of a university capstone project, this application demonstrates the use of AI and computer vision for public safety. It supports early shark detection from aerial drone footage with the goal of assisting lifeguards and emergency response teams.
 
 
-
 ## The Dataset
-We used a custom dataset combining open-source aerial footage and custom footage. Noise images (e.g., surfers, dolphins, background) were added to reduce false positives.
+We used a custom dataset combining open-source aerial footage and custom footage. Negative examples (e.g., images of surfers, dolphins, and empty ocean scenes) were included to help the model distinguish sharks from other marine objects and reduce false positives.
 Data was split into 70% training, 20% validation, 10% testing.
 ![Image Augmentation used](Screenshots/data_augmentation.png)
-
 
 
 ## Training the Model
@@ -41,16 +46,36 @@ The notebook [Model_training_notebook.ipynb](Model_training/Model_training_noteb
  
 
 ## Running the App
-
 Open Command Prompt (CMD) or Terminal.
 
-1. Navigate to the app’s folder. For example:
-cd "/Users/calebcougle/Shark_detector"
+1.  **Navigate to the app’s folder.**
+    Use the `cd` command. For example:
+    ```bash
+    cd "/path/to/your/app/folder"
+    ```
+    (Remember to replace `/path/to/your/app/folder` with your actual directory.)
 
-2. Run the app using Streamlit:
-python -m streamlit run shark.py
+2.  **Run the app using Streamlit.**
+    Execute:
+    ```bash
+    python -m streamlit run shark.py
+    ```
+    Your default browser should automatically open the app. If not, copy the URL shown in CMD/Terminal.
 
-Your default browser should automatically open the app. If not, copy the URL shown in CMD/Terminal and paste it into your browser.
+3.  **Configure Confidence Level**
+    Adjust the "Confidence Level" slider. Only predictions with a confidence score *above* this threshold will be displayed. Higher confidence means fewer, but generally more reliable, detections.
+
+4.  **Upload Content for Detection**
+    * **For Image Detection:** Drag and drop or browse to select a `.jpg`, `.jpeg`, or `.png` image. The app will then process and display detections.
+    * **For Video Detection:** Drag and drop or browse to select a `.mp4` or `.mpeg4` video. The app will process and display detections in real-time as it plays.
+
+5. **Voilà!**
+The model will **detect** if there is a **shark** in the image or video and surround it with **a bounding box** displaying the confidence score.
+
+    ![Shark Detected Example](Screenshots/shark-found.png)
+    *A detected shark with its bounding box and confidence score.*
+
+
 
 ### Requirements
 - Python 3.9+
@@ -59,6 +84,6 @@ Your default browser should automatically open the app. If not, copy the URL sho
 - OpenCV
 - Roboflow
 ## Notes
-- This is a proof-of-conceopt and not production ready
+- This is a proof-of-concept and not production ready
 - Intended for educational demonstration and not operational
-- All data used to trained the model was publically sourced/ open licence.
+- All data used to train the model was publicly sourced/openly licensed.
