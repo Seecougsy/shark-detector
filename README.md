@@ -15,10 +15,11 @@ This app uses a YOLOv8s model trained on aerial images to detect sharks in real-
 ## Key Features
 
 * **Real-time Detection:** Analyzes live video streams for immediate threat identification.
-* **Static Image Analysis:** Capable of processing individual photos.
+* **Image Analysis:** Capable of processing individual photos.
 * **Adjustable Confidence Threshold:** Allows users to control the sensitivity of detections.
 * **Visual Bounding Boxes:** Displays detected sharks with clear bounding boxes and confidence scores.
 * **Drone Deployable:** Designed with potential for integration into drone operations.
+
 
 ## Technologies Used
 
@@ -31,17 +32,16 @@ This app uses a YOLOv8s model trained on aerial images to detect sharks in real-
 
 
 ## Background
-Developed as part of a university capstone project, this application demonstrates the use of AI and computer vision for public safety. It supports early shark detection from aerial drone footage with the goal of assisting lifeguards and emergency response teams.
+Developed as part of a university capstone project, this application demonstrates the use of AI and computer vision for public safety. `YOLOv8` was selected for its one-pass architecture, which processes entire images in real time, suitable for the  project requirements. It supports early shark detection from aerial drone footage with the goal of assisting lifeguards and emergency response teams.
 
 
 ## The Dataset
-We used a custom dataset combining open-source aerial footage and custom footage. Negative examples (e.g., images of surfers, dolphins, and empty ocean scenes) were included to help the model distinguish sharks from other marine objects and reduce false positives.
+We used a custom dataset combining open-source aerial footage and custom footage. Negative examples (e.g., images of surfers, dolphins, and empty ocean scenes) were included to help the model distinguish sharks from other marine objects and reduce false positives. The dataset size was 15907 total images.
 Data was split into 70% training, 20% validation, 10% testing.
 ![Image Augmentation used](Screenshots/data_augmentation.png)
 
 
 ## Training the Model
-
 The notebook [Model_training_notebook.ipynb](Model_training/Model_training_notebook.ipynb) contains the full training pipeline used before integrating the model weights into the application. The model was trained using:
 
 * YOLOv8s from Ultralytics
@@ -50,11 +50,26 @@ The notebook [Model_training_notebook.ipynb](Model_training/Model_training_noteb
 * 60 epochs with batch size 64
 * Input resolution upscaled to 960×960 for final models
 
-**Key metrics (best run):**
+During training, we monitored key metrics to ensure optimal performance:
+![Training Results Curves](results.jpg)
+*The training and validation loss curves show the model converging, while precision, recall, and mAP metrics improved steadily over 15 epochs, indicating effective learning and generalization.*
 
-* mAP@0.5: 0.960
-* Precision: 0.955
-* Recall: 0.909
+
+## The Dataset
+We used a custom dataset combining open-source aerial footage and custom footage. Negative examples (e.g., images of surfers, dolphins, and empty ocean scenes) were included to help the model distinguish sharks from other marine objects and reduce false positives. The dataset size was **15,907 total images**.
+Data was split into 70% training, 20% validation, 10% testing.
+![Image Augmentation used](Screenshots/data_augmentation.png)
+
+### Key metrics (best run):
+`mAP@50: 96.4%`
+
+`Precision: 94.0%`
+
+`Recall: 91.6% `
+
+### Confusion Matrix:
+
+
 
 ## Running the App
 Open Command Prompt (CMD) or Terminal.
