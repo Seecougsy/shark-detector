@@ -4,19 +4,12 @@ This app uses a YOLOv8s model trained on aerial images to detect sharks in real-
 ## Project Overview
 
 - Team Project @ Torrens University
-
 - Built as a real-time marine threat detection tool deployable via drones
-
 - Dataset consisted of aerial marine footage featuring sharks, swimmers, surfers, dolphins, and empty ocean scenes
-
 - Cleaned and labelled images using Roboflow, including manual annotation
-
 - Applied data augmentation (flip, shear, crop, etc.) to reduce overfitting and improve generalisation
-
 - Trained YOLOv8s in Google Colab using a high-performance A100 GPU
-
 - Model performance tracked via mAP, precision, and recall – reaching up to 0.96 mAP@0.5
-
 - Exported the best weights as best.pt and integrated into a Streamlit demo application
 
 ## Background
