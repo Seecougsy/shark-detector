@@ -1,17 +1,32 @@
 # Shark Detector - Real-time shark detection
 This app uses a YOLOv8s model trained on aerial images to detect sharks in real-time video and static photos, showing bounding boxes and confidence scores.
 
-# Overview
-Developed as part of a university group project, this drone-deployable shark detection system uses Python and YOLOv8 to identify marine threats in real time using a model we trained. The intention is to support coastal safety by enabling automated monitoring along Australian shorelines. 
+## Project Overview
 
-# Model Training
-We used publicly available aerial marine datasets and trained a custom YOLOv8 object detection model via Roboflow. The training process involved:
+- Team Project @ Torrens University
+- Collected and cleaned a large aerial marine dataset using public sources on found on 
 
-- Label management, data augmentation, and evaluation
+- Applied image augmentation via Roboflow to improve generalisation and reduce overfitting
 
-- Exported the best model as a .pt file integrated into the Streamlit app
+- Trained a YOLOv8s object detection model and exported the best-performing .pt file
 
-# Launch
+- Integrated the trained model into a demo application using Streamlit
+
+- Intended for deployment on drones to support beach safety
+
+## Background
+Developed as part of a university group project, this application demonstrates the practical use of AI and computer vision for public safety. The aim was to build a real-time marine threat detection tool deployable via drones, focusing on Australia's beaches so that.
+
+
+## Model Training
+We used publicly available aerial datasets and trained a custom object detection model using Roboflow and Ultralytics YOLOv8. Training involved:
+
+- Data annotation and image augmentation
+- Model training, evaluation, and tuning
+- Exporting the final model as `best.pt`
+
+
+## Running the App
 
 Open Command Prompt (CMD) or Terminal.
 
@@ -22,3 +37,7 @@ cd "/Users/calebcougle/Shark_detector"
 python -m streamlit run shark.py
 
 Your default browser should automatically open the app. If not, copy the URL shown in CMD/Terminal and paste it into your browser.
+
+### Requirements
+
+## Notes
