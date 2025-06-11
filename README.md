@@ -51,14 +51,28 @@ The notebook [Model_training_notebook.ipynb](Model_training/Model_training_noteb
 * Input resolution upscaled to 960×960 for final models
 
 During training, we monitored key metrics to ensure optimal performance:
-![Training Results Curves](results.jpg)
+![Training Results Curves](Screenshots/results.png)
 *The training and validation loss curves show the model converging, while precision, recall, and mAP metrics improved steadily over 15 epochs, indicating effective learning and generalization.*
-
 
 ## The Dataset
 We used a custom dataset combining open-source aerial footage and custom footage. Negative examples (e.g., images of surfers, dolphins, and empty ocean scenes) were included to help the model distinguish sharks from other marine objects and reduce false positives. The dataset size was **15,907 total images**.
 Data was split into 70% training, 20% validation, 10% testing.
 ![Image Augmentation used](Screenshots/data_augmentation.png)
+
+## Model Performance
+????? come back ????? To comprehensively evaluate the model's accuracy and identify areas for improvement, various metrics and visualisations were analyzed on the test set.
+
+**Confusion Matrix:**
+![Model Confusion Matrix for Single Class Shark](Screenshots/confusion_matrix.png)
+*On the validation set, the model correctly identified **928** shark images (true positives). It also misclassified **148** background images as sharks (false positives) and missed **107** sharks by labelling them as background (false negatives). 
+
+
+
+
+
+
+
+
 
 ### Key metrics (best run):
 `mAP@50: 96.4%`
