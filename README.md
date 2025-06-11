@@ -1,6 +1,5 @@
 ![Project Banner YOLOv8 Shark Detecter](Screenshots/shark-detector-02.png)
-
-This app uses a YOLOv8s model trained on aerial images to detect sharks in real-time video and static photos, showing bounding boxes and confidence scores.
+This app is a prototype showcasing a `YOLOv8s` model for real-time shark detection in aerial images and videos. It aims to demonstrate how AI object detection on drones presents an opportunity to enhance public safety in Australia, addressing concerns such as drowning risks in unpatrolled areas and reducing the need for harmful measures to prevent shark encounters. The system detects sharks—and can include other marine threats, such as distressed swimmers—alerting local surf lifesavers for quick responses. This tool complements existing safety measures, enhancing support while avoiding practices that harm local ecosystems.
 
 ![Shark Detector Application Interface](Screenshots/detector-app2.png)
 *Shark Detector Application Interface.*
@@ -10,7 +9,7 @@ This app uses a YOLOv8s model trained on aerial images to detect sharks in real-
 ## Project Overview
 
 * **Team Project:** Developed as a university capstone project at Torrens University.
-* **Goal:** Built as a real-time marine threat detection tool deployable via drones, aiming to assist lifeguards and emergency response teams with early shark detection.
+* **Goal:** Built as a real-time marine threat detection tool deployable via drones, aiming to assist lifeguards avoid shark encounters.
 
 ## Key Features
 
@@ -25,21 +24,14 @@ This app uses a YOLOv8s model trained on aerial images to detect sharks in real-
 
 * **Python 3.9+:** The primary programming language.
 * **Streamlit:** Used for building the interactive web demonstration application.
-* **Ultralytics (YOLOv8s):** The state-of-the-art object detection model for shark identification.
-* **OpenCV:** Utilized for image and video processing tasks.
-* **Roboflow:** Employed for dataset management, labeling, and robust data augmentation.
+* **Ultralytics (YOLOv8s):** One pass real-time object detection.
+* **OpenCV:** Utilised for image and video processing tasks.
+* **Roboflow:** Employed for dataset management, labeling, and data augmentation.
 * **Google Colab (A100 GPU):** Used for high-performance model training.
 
 
 ## Background
 Developed as part of a university capstone project, this application demonstrates the use of AI and computer vision for public safety. `YOLOv8` was selected for its one-pass architecture, which processes entire images in real time, suitable for the  project requirements. It supports early shark detection from aerial drone footage with the goal of assisting lifeguards and emergency response teams.
-
-
-## The Dataset
-We used a custom dataset combining open-source aerial footage and custom footage. Negative examples (e.g., images of surfers, dolphins, and empty ocean scenes) were included to help the model distinguish sharks from other marine objects and reduce false positives. The dataset size was 15907 total images.
-Data was split into 70% training, 20% validation, 10% testing.
-![Image Augmentation used](Screenshots/data_augmentation.png)
-
 
 ## Training the Model
 The notebook [Model_training_notebook.ipynb](Model_training/Model_training_notebook.ipynb) contains the full training pipeline used before integrating the model weights into the application. The model was trained using:
@@ -57,33 +49,24 @@ During training, we monitored key metrics to ensure optimal performance:
 ## The Dataset
 We used a custom dataset combining open-source aerial footage and custom footage. Negative examples (e.g., images of surfers, dolphins, and empty ocean scenes) were included to help the model distinguish sharks from other marine objects and reduce false positives. The dataset size was **15,907 total images**.
 Data was split into 70% training, 20% validation, 10% testing.
+
+### Data Augmentation
+Data augmentation techniques were implemented within the `Roboflow` platform to improve generalisation and reduce overfitting. Effective techniques for augmentation followed [*A Survey on Image Data Augmentation for Deep Learning*](https://journalofbigdata.springeropen.com/articles/10.1186/s40537-019-0197-0)
+ 
+
 ![Image Augmentation used](Screenshots/data_augmentation.png)
 
 ## Model Performance
-????? come back ????? To comprehensively evaluate the model's accuracy and identify areas for improvement, various metrics and visualisations were analyzed on the test set.
+To identify the best configuration of the parameters, all model training runs and their performance metrics were meticautomatically logged and compared. 
 
-**Confusion Matrix:**
+### Key Metrics (best run)
+* `mAP@50: 96.4%`
+* `Precision: 94.0%`
+* `Recall: 91.6% `
+
+### Confusion Matrix
+On the validation set, the model correctly identified **928** shark images (true positives). It also misclassified **148** background images as sharks (false positives) and missed **107** sharks by labelling them as background (false negatives).
 ![Model Confusion Matrix for Single Class Shark](Screenshots/confusion_matrix.png)
-*On the validation set, the model correctly identified **928** shark images (true positives). It also misclassified **148** background images as sharks (false positives) and missed **107** sharks by labelling them as background (false negatives). 
-
-
-
-
-
-
-
-
-
-### Key metrics (best run):
-`mAP@50: 96.4%`
-
-`Precision: 94.0%`
-
-`Recall: 91.6% `
-
-### Confusion Matrix:
-
-
 
 ## Running the App
 Open Command Prompt (CMD) or Terminal.
@@ -115,8 +98,6 @@ The model will **detect** if there is a **shark** in the image or video and surr
     ![Shark Detected Example](Screenshots/shark-found.png)
     *A detected shark with its bounding box and confidence score.*
 
-
-
 ### Requirements
 - Python 3.9+
 - Streamlit
@@ -124,6 +105,8 @@ The model will **detect** if there is a **shark** in the image or video and surr
 - OpenCV
 - Roboflow
 ## Notes
-- This is a proof-of-concept and not production ready
-- Intended for educational demonstration and not operational
-- All data used to train the model was publicly sourced/openly licensed.
+- **Proof of Concept:** Not production ready  
+- **Educational Demo:** Intended for learning, not operational use  
+- **Data Source:** All training data was publicly sourced/openly licensed  
+- **Data Augmentation:** Techniques followed [A Comprehensive Survey on Data Augmentation in Visual Recognition](https://journalofbigdata.springeropen.com/articles/10.1186/s40537-019-0197-0)  
+- **YOLO Tutorials:** Based on [YOLO Development for Beginners v8/v9/v10: From the basic usage of YOLO to implementing applications with Python](https://www.amazon.com/dp/XXXXXXXXXX) by Joe A.  
