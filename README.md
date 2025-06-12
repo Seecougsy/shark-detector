@@ -1,10 +1,12 @@
-![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![Location](https://img.shields.io/badge/Location-Brisbane%2C%20Australia-lightgrey.svg)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg?logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)
 ![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-darkgreen.svg?logo=ultralytics&logoColor=white)
-![Location](https://img.shields.io/badge/Location-Brisbane%2C%20Australia-lightgrey.svg)
-![GitHub Forks](https://img.shields.io/github/forks/seecougsy/shark-detector?style=social)
+![GitHub Forks](https://img.shields.io/github/forks/seecougsy/shark-detector)
 ![Last Commit](https://img.shields.io/github/last-commit/seecougsy/shark-detector)
+
 ![Project Banner YOLOv8 Shark Detecter](Screenshots/shark-detector-02.png)
 ## YOLOv8 Shark Detector Application
 This app is a prototype showcasing a `YOLOv8s` model for real-time shark detection in aerial images and videos. It aims to demonstrate how AI object detection on drones presents an opportunity to enhance public safety in Australia, addressing concerns such as drowning risks in unpatrolled areas and reducing the need for harmful measures to prevent shark encounters. The system detects sharks—and can include other marine threats, such as distressed swimmers—alerting local surf lifesavers for quick responses. This tool complements existing safety measures, enhancing support while avoiding practices that harm local ecosystems.
@@ -65,7 +67,7 @@ Data augmentation techniques were implemented within the `Roboflow` platform to 
 ![Image Augmentation used](Screenshots/data_augmentation.png)
 
 ## Model Performance
-To identify the best configuration of the parameters, all model training runs and their performance metrics were meticautomatically logged and compared. 
+To identify the best configuration of the parameters, all model training runs and their performance metrics were automatically logged and compared. 
 
 ### Key Metrics (best run)
 * `mAP@50: 96.4%`
@@ -112,6 +114,7 @@ The model will **detect** if there is a **shark** in the image or video and surr
 - Ultralytics
 - OpenCV
 - Roboflow
+
 ## Notes
 - **Proof of Concept:** Not production ready  
 - **Educational Demo:** Intended for learning, not operational use  

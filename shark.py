@@ -1,3 +1,16 @@
+# -----------------------------------------------------------------------------
+# YOLOv8 Shark Detector
+#
+# This project uses Ultralytics YOLOv8 (AGPL-3.0) by Glenn Jocher et al.
+# https://github.com/ultralytics/ultralytics
+#
+# By using or distributing this code, you agree to the terms of the
+# GNU Affero General Public License v3.0:
+# https://www.gnu.org/licenses/agpl-3.0.txt
+# -----------------------------------------------------------------------------
+
+
+# Import necessary libraries
 from ultralytics import YOLO
 import streamlit as st
 from PIL import Image
