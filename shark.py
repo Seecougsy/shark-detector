@@ -14,7 +14,7 @@ model = YOLO("best.pt")
 
 st.markdown("""
 <div class="title-box">
-    <div class="custom-title">Shark Detection 🦈</div>
+    <div class="custom-title">Safe Distance Shark Monitor 🚁</div>
     <div class="subtitle">Using YOLOv8 for real-time shark detection</div>
 </div>
 """, unsafe_allow_html=True)
@@ -23,7 +23,10 @@ st.markdown(""" <div class="section-box">
             <div class="section-title">1. Set Detection Confidence Threshold</div>
             <div class="section-subtitle">Only predictions above this confidence level will be shown.</div>
             </div>""", unsafe_allow_html=True)
-conf_threshold = st.slider("", 0.2, 1.0, 0.7, 0.05)
+conf_threshold = st.slider("Confidence threshold", 
+                           0.2, 1.0, 0.7, 0.05,
+                           help="Drag to set the minimum detection confidence"
+                           )
 
 
 # ========== IMAGE DETECTION ==========
