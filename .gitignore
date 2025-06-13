@@ -11,3 +11,4 @@ runs/
 
 # macOS system files
 .DS_Store
+performance_tracking.csv
