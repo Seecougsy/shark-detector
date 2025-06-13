@@ -1,4 +1,4 @@
-# Training Notebook: Safe Distance Shark Monitor
+![Project Banner YOLOv8 Shark Detecter](Screenshots/training_readme.png)
 
 This document explains running the [Model Training Notebook](./Model_training_notebook.ipynb) with YOLO and Robolow to train an object detection model with a custom dataset.
 
