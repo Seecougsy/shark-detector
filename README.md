@@ -9,7 +9,7 @@
 
 
 
-![Project Banner YOLOv8 Shark Detector](Screenshots/shark-detector-02.png)
+![Project Banner YOLOv8 Shark Detector](Screenshots/sharkdetector_readme_banner.png)
 ## YOLOv8 Shark Detector Application  
 
 Developed as part of a `Torrens University` capstone project, this app leverages `Ultralytics` `YOLOv8` on aerial drone imagery to detect sharks and other marine hazards in real time. Built with Streamlit for rapid prototyping, it provides an early-warning tool to support lifeguards and enhance beach safety.

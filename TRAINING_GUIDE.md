@@ -1,6 +1,6 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Seecougsy/shark-detector/blob/main/Model_training/train_model.ipynb)
 
-![Project Banner YOLOv8 Shark Detecter](Screenshots/training_readme.png)
+![Project Banner YOLOv8 Shark Detecter](Screenshots/training_readme_banner.png)
 
 This document explains running the [Model Training Notebook](Model_training/train_model.ipynb) with YOLO and Robolow to train an object detection model with a custom dataset.
 
