@@ -121,7 +121,7 @@ if uploaded_video is not None:
         if not ret:
             break
         # Use selected confidence threshold for prediction
-        results = model.predict(frame, conf=conf_threshold, iou=0.5)
+        results = model.track(source=frame, conf=conf_threshold, iou=0.5)
         frame = results[0].plot()
         out.write(frame)
 
