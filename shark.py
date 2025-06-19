@@ -11,12 +11,19 @@
 
 
 # Import necessary libraries
+import torch
 from ultralytics import YOLO
 import streamlit as st
 from PIL import Image
 import cv2
 import tempfile
 import os
+import time
+import numpy
+
+import streamlit as st
+from ultralytics import solutions
+
 
 # Inject custom CSS
 with open("Static/style.css") as f:
@@ -24,111 +31,156 @@ with open("Static/style.css") as f:
 
 # Load model
 model = YOLO("best.pt")
+model_live = YOLO("best_nano.pt")
 
-st.markdown("""
+model_live.model.fuse()  # fuse Conv+BN layers
+
+import torch.nn as nn, torch
+
+model_live.model = torch.quantization.quantize_dynamic(
+    model_live.model, {nn.Conv2d}, dtype=torch.qint8
+)
+
+st.markdown(
+    """
 <div class="title-box">
     <div class="custom-title">Safe Distance Shark Monitor 🚁</div>
     <div class="subtitle">Using YOLOv8 for real-time shark detection</div>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
-st.markdown(""" <div class="section-box"> 
+st.markdown(
+    """ <div class="section-box"> 
             <div class="section-title">1. Set Detection Confidence Threshold</div>
             <div class="section-subtitle">Only predictions above this confidence level will be shown.</div>
-            </div>""", unsafe_allow_html=True)
-conf_threshold = st.slider("Confidence threshold", 
-                           0.2, 1.0, 0.7, 0.05,
-                           help="Drag to set the minimum detection confidence"
-                           )
+            </div>""",
+    unsafe_allow_html=True,
+)
+conf_threshold = st.slider(
+    "Confidence threshold",
+    0.2,
+    1.0,
+    0.7,
+    0.05,
+    help="Drag to set the minimum detection confidence",
+)
 
 
 # ========== IMAGE DETECTION ==========
-st.markdown("""
+st.markdown(
+    """
 <div class="section-box">
     <div class="section-title">
         2. Select a Detection Mode
     </div>
     <div class="section-subtitle">Upload an image or a video to detect sharks</div>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
+mode = st.selectbox("Choose Mode", ["Select...", "Image", "Video", "Live"])
 
-col1, col2 = st.columns(2)
+if mode == "Image":
+    with st.container():
+        st.subheader("🖼️ Image Detection")
+        uploaded_img = st.file_uploader(
+            "Upload an image", type=["jpg", "jpeg", "png"], key="image"
+        )
 
-with col1:
-    st.markdown("""
-    <div class="mini-box">
-        <div class="mini-title">🖼️ Image Detection</div>
-        <div class="mini-subtitle">Find a shark in an image</div>
-    </div>
-    """, unsafe_allow_html=True)
-    uploaded_img = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"], key="image")
+        if uploaded_img is not None:
+            image = Image.open(uploaded_img)
+            results = model.predict(image, conf=conf_threshold, iou=0.5)
+            annotated = results[0].plot()
+            annotated = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+            st.image(annotated, caption="Detection result", use_container_width=True)
+
+            detected_classes = [model.names[int(box.cls)] for box in results[0].boxes]
+            if "shark" in detected_classes:
+                st.error("Shark detected in image.")
+            else:
+                st.info("No shark detected.")
+
+elif mode == "Video":
+    with st.container():
+        st.subheader("🎥 Video Detection")
+        uploaded_video = st.file_uploader("Upload a video", type=["mp4"], key="video")
+        if uploaded_video:
+            # write temp file
+            tfile = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False)
+            tfile.write(uploaded_video.read())
+            video_path = tfile.name
+
+            stframe = st.empty()
+            model_live.to("cuda" if torch.cuda.is_available() else "cpu")
+            torch.set_grad_enabled(False)
+
+            for result in model_live.predict(
+                source=video_path,
+                stream=True,
+                conf=conf_threshold,
+                vid_stride=4,
+                augment=False,
+                show_conf=False,
+                show_labels=False,
+            ):
+                # get the raw frame back
+                frame = result.orig_img.copy()
+
+                # draw each box (no text)
+                for box in result.boxes.xyxy.cpu().numpy():
+                    x1, y1, x2, y2 = map(int, box)
+                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+                stframe.image(
+                    frame,
+                    channels="BGR",
+                    use_container_width=True,
+                    output_format="JPEG",
+                )
+
+            tfile.close()
 
 
-if uploaded_img is not None:
-    # Read the uploaded image
-    image = Image.open(uploaded_img)
+elif mode == "Live":
+    with st.container():
+        st.subheader("📹 Live Webcam Detection")
 
-    # Run YOLOv8 on it (no file gets written because save=False by default)
-    results   = model.predict(image, conf=conf_threshold, iou=0.5)
+        # Initialize webcam state
+        if "webcam_on" not in st.session_state:
+            st.session_state.webcam_on = False
 
-    # Convert YOLO’s BGR image (results[0].plot()) ➜ RGB for Streamlit
-    annotated = results[0].plot()
-    annotated = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+        start = st.button("🟢 Start Webcam")
+        stop = st.button("🔴 Stop Webcam")
+        if start:
+            st.session_state.webcam_on = True
+        if stop:
+            st.session_state.webcam_on = False
 
-    # Display **only** the prediction
-    st.image(annotated, caption="Detection result", use_container_width=True)
+        st.markdown(
+            f"**Status:** {'🟢 Running' if st.session_state.webcam_on else '🔴 Stopped'}"
+        )
 
-    # Inform the user whether a shark was detected
-    detected_classes = [model.names[int(box.cls)] for box in results[0].boxes]
-    if "shark" in detected_classes:
-        st.error("Shark detected in image.")
-    else:
-        st.info("No shark detected.")
-    
+        if st.session_state.webcam_on:
+            stframe = st.empty()
+            model_live.to("cuda" if torch.cuda.is_available() else "cpu")
+            torch.set_grad_enabled(False)
 
-# ========== VIDEO DETECTION ==========
-with col2:
-    st.markdown("""
-    <div class="mini-box">
-        <div class="mini-title">🎥 Video Detection</div>
-        <div class="mini-subtitle">Find a shark in a video</div>
-    </div>
-    """, unsafe_allow_html=True)
-    uploaded_video = st.file_uploader("Upload a video", type=["mp4"], key="video")
-
-if uploaded_video is not None:
-    tfile = tempfile.NamedTemporaryFile(delete=False)
-    tfile.write(uploaded_video.read())
-    video_path = tfile.name
-
-    st.video(video_path)
-    st.info("Processing video, please wait...")
-
-    cap = cv2.VideoCapture(video_path)
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-    output_dir = os.path.join("runs", "shark-detect-video")
-    os.makedirs(output_dir, exist_ok=True)
-    out_path = os.path.join(output_dir, "output.mp4")
-
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(out_path, fourcc, fps, (width, height))
-
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        # Use selected confidence threshold for prediction
-        results = model.track(source=frame, conf=conf_threshold, iou=0.5)
-        frame = results[0].plot()
-        out.write(frame)
-
-    cap.release()
-    out.release()
-
-    st.success("✅ Video detection complete!")
-    st.video(out_path)
-    with open(out_path, "rb") as file:
-        st.download_button(label="📥 Download Result Video", data=file, file_name="shark_detected.mp4", mime="video/mp4")
+            for result in model_live.predict(
+                source=0,  # 0 = default webcam
+                stream=True,  # frame-by-frame generator
+                conf=conf_threshold,
+                iou=0.5,
+                vid_stride=2,  # process every 3rd frame
+                show_conf=False,
+                show_labels=False,
+                augment=False,
+            ):
+                frame = result.plot()
+                stframe.image(
+                    frame,
+                    channels="BGR",
+                    output_format="JPEG",
+                    use_container_width=True,
+                )
