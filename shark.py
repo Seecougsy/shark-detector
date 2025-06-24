@@ -68,12 +68,15 @@ conf_threshold = st.slider(
 )
 
 
+
 # ========== IMAGE DETECTION ==========
+st.info(" ## Select a Detection Mode"
+" ## Upload an image or a video to detect sharks")
 st.markdown(
     """
 <div class="section-box">
     <div class="section-title">
-        2. Select a Detection Mode
+        2
     </div>
     <div class="section-subtitle">Upload an image or a video to detect sharks</div>
 </div>
@@ -145,21 +148,24 @@ elif mode == "Video":
 
 elif mode == "Live":
     with st.container():
-        st.subheader("📹 Live Webcam Detection")
+        st.info("""
+            ## Stream Webcam  
+            Click **Start** to begin live detection via your webcam.
+            """)
 
         # Initialize webcam state
         if "webcam_on" not in st.session_state:
             st.session_state.webcam_on = False
 
-        start = st.button("🟢 Start Webcam")
-        stop = st.button("🔴 Stop Webcam")
+        start = st.button("Start")
+        stop = st.button("Stop")
         if start:
             st.session_state.webcam_on = True
         if stop:
             st.session_state.webcam_on = False
 
         st.markdown(
-            f"**Status:** {'🟢 Running' if st.session_state.webcam_on else '🔴 Stopped'}"
+            f"**Status:** {'Running' if st.session_state.webcam_on else 'Stopped'}"
         )
 
         if st.session_state.webcam_on:
