@@ -51,142 +51,121 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.markdown(
-    """ <div class="section-box"> 
-            <div class="section-title">1. Set Detection Confidence Threshold</div>
-            <div class="section-subtitle">Only predictions above this confidence level will be shown.</div>
-            </div>""",
-    unsafe_allow_html=True,
-)
-conf_threshold = st.slider(
-    "Confidence threshold",
-    0.2,
-    1.0,
-    0.7,
-    0.05,
-    help="Drag to set the minimum detection confidence",
-)
+# st.markdown(
+#     """ <div class="section-box">
+#             <div class="section-title">1. Set Detection Confidence Threshold</div>
+#             <div class="section-subtitle">Only predictions above this confidence level will be shown.</div>
+#             </div>""",
+#     unsafe_allow_html=True,
+# )
+st.header("Detection Process")
 
+st.markdown("Using :blue-background[YOLOv8] for :rainbow[***real-time***] shark detection, the system processes :blue[***images***], :orange[***videos***], and :green[***live feeds***] to demonstrate the potential of computer vision technology in real-world applications." , width ="content")
 
+with st.container():
+    st.subheader("1. Set Confidence Threshold")
+    st.markdown("- A :red-background[higher:material/stat_1:] confidence threshold will result in ***fewer***, but more ***certain***, detections." )
+    st.markdown("- A :blue-background[lower:material/stat_minus_1:] confidence threshold may capture more subtle detections but may ***also*** include more ***false alarms.***", )
+    conf_threshold = st.slider(
+        "Confidence threshold",
+        0.2,
+        1.0,
+        0.7,
+        0.05,
+        help="Drag to set the minimum detection confidence",
+    )
 
-# ========== IMAGE DETECTION ==========
-st.info(" ## Select a Detection Mode"
-" ## Upload an image or a video to detect sharks")
-st.markdown(
-    """
-<div class="section-box">
-    <div class="section-title">
-        2
-    </div>
-    <div class="section-subtitle">Upload an image or a video to detect sharks</div>
-</div>
-""",
-    unsafe_allow_html=True,
-)
-mode = st.selectbox("Choose Mode", ["Select...", "Image", "Video", "Live"])
+    st.subheader("2. Upload or Stream Media")
+    # Controls in columns
+    col1, col3 = st.tabs([":material/upload: Upload File", ":material/camera_video: Live Stream",])
 
-if mode == "Image":
-    with st.container():
-        st.subheader("🖼️ Image Detection")
-        uploaded_img = st.file_uploader(
-            "Upload an image", type=["jpg", "jpeg", "png"], key="image"
-        )
+    with col1:
+        st.markdown("Upload an image or video to see detections on recorded media.")
+        uploaded_file = st.file_uploader("", type=["jpg","png","mp4"])
+    with col3:
+        st.markdown("Quick and dirty way to simulate a live environment for beach monitoring — just point your webcam at drone footage on another device")
+        st.info("Toggle to start/stop webcam stream.")
+        stream_on = st.checkbox("Activate Webcam", value=False, key="webcam_on")
 
-        if uploaded_img is not None:
-            image = Image.open(uploaded_img)
-            results = model.predict(image, conf=conf_threshold, iou=0.5)
-            annotated = results[0].plot()
-            annotated = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
-            st.image(annotated, caption="Detection result", use_container_width=True)
+    # Full-width output container
+    output_slot = st.container()
+    frame_slot = output_slot.empty()
 
-            detected_classes = [model.names[int(box.cls)] for box in results[0].boxes]
-            if "shark" in detected_classes:
-                st.error("Shark detected in image.")
-            else:
-                st.info("No shark detected.")
+    # Handle uploaded file
 
-elif mode == "Video":
-    with st.container():
-        st.subheader("🎥 Video Detection")
-        uploaded_video = st.file_uploader("Upload a video", type=["mp4"], key="video")
-        if uploaded_video:
-            # write temp file
+    if uploaded_file:
+        st.session_state.shark_alerted = False
+        filename = uploaded_file.name.lower()
+        if filename.endswith(".mp4"):
+            # video
+
+   
+
             tfile = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False)
-            tfile.write(uploaded_video.read())
-            video_path = tfile.name
+            tfile.write(uploaded_file.read())
+            tfile.close()
 
-            stframe = st.empty()
             model_live.to("cuda" if torch.cuda.is_available() else "cpu")
-            torch.set_grad_enabled(False)
 
-            for result in model_live.predict(
-                source=video_path,
+            for res in model_live.predict(
+                source=tfile.name,
                 stream=True,
                 conf=conf_threshold,
                 vid_stride=4,
-                augment=False,
-                show_conf=False,
-                show_labels=False,
-            ):
-                # get the raw frame back
-                frame = result.orig_img.copy()
-
-                # draw each box (no text)
-                for box in result.boxes.xyxy.cpu().numpy():
-                    x1, y1, x2, y2 = map(int, box)
-                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-
-                stframe.image(
-                    frame,
-                    channels="BGR",
-                    use_container_width=True,
-                    output_format="JPEG",
-                )
-
-            tfile.close()
-
-
-elif mode == "Live":
-    with st.container():
-        st.info("""
-            ## Stream Webcam  
-            Click **Start** to begin live detection via your webcam.
-            """)
-
-        # Initialize webcam state
-        if "webcam_on" not in st.session_state:
-            st.session_state.webcam_on = False
-
-        start = st.button("Start")
-        stop = st.button("Stop")
-        if start:
-            st.session_state.webcam_on = True
-        if stop:
-            st.session_state.webcam_on = False
-
-        st.markdown(
-            f"**Status:** {'Running' if st.session_state.webcam_on else 'Stopped'}"
-        )
-
-        if st.session_state.webcam_on:
-            stframe = st.empty()
-            model_live.to("cuda" if torch.cuda.is_available() else "cpu")
-            torch.set_grad_enabled(False)
-
-            for result in model_live.predict(
-                source=0,  # 0 = default webcam
-                stream=True,  # frame-by-frame generator
-                conf=conf_threshold,
                 iou=0.5,
-                vid_stride=2,  # process every 3rd frame
-                show_conf=False,
-                show_labels=False,
-                augment=False,
             ):
-                frame = result.plot()
-                stframe.image(
-                    frame,
-                    channels="BGR",
-                    output_format="JPEG",
-                    use_container_width=True,
-                )
+                frame = res.orig_img.copy()
+                for x1, y1, x2, y2 in res.boxes.xyxy.cpu().numpy():
+                    cv2.rectangle(
+                        frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2
+                    )
+                frame_slot.image(frame, channels="BGR", use_container_width=True)
+
+
+                            # only toast the first time we actually detect a shark
+                names = [model.names[int(b.cls)] for b in res.boxes]
+                if "shark" in names and not st.session_state.shark_alerted:
+                    st.toast("The model detected a Shark 🦈")
+                    st.session_state.shark_alerted = True
+            os.remove(tfile.name)
+
+
+        else:
+            # image
+            img = Image.open(uploaded_file)
+            results = model.predict(img, conf=conf_threshold, iou=0.5)
+            ann = results[0].plot()
+            ann_rgb = cv2.cvtColor(ann, cv2.COLOR_BGR2RGB)
+            frame_slot.image(ann_rgb, caption="Detection result", use_container_width=True)
+            labels = [model.names[int(b.cls)] for b in results[0].boxes]
+            if "shark" in labels:
+                output_slot.success("Shark detected in media")
+                st.toast('The model detected a Shark', icon="🦈")
+            else:
+                output_slot.error("No shark detected.")
+
+    # Handle live webcam
+
+    # for "shark" toast message"
+    if "shark_alerted" not in st.session_state:
+        st.session_state.shark_alerted = False
+
+    if st.session_state.get("webcam_on", False):
+        model_live.to("cuda" if torch.cuda.is_available() else "cpu")
+        for res in model_live.predict(
+            source=0, stream=True,
+            conf=conf_threshold, vid_stride=2, iou=0.5
+        ):
+            if not st.session_state.webcam_on:
+                break
+
+            frame = res.plot()
+            frame_slot.image(frame, channels="BGR", use_container_width=True)
+
+            # check for shark boxes
+            classes = [int(b.cls) for b in res.boxes]
+            names   = [model.names[c] for c in classes]
+            if "shark" in names and not st.session_state.shark_alerted:
+                # first time only:
+                st.toast("The model detected a Shark", icon="🦈")
+                st.session_state.shark_alerted = True
