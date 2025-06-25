@@ -13,3 +13,5 @@ Pillow
 
 # Arrays & placeholders
 numpy
+
+opencv-python-headless
