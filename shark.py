@@ -18,11 +18,6 @@ from PIL import Image
 import cv2
 import tempfile
 import os
-import time
-import numpy
-
-import streamlit as st
-from ultralytics import solutions
 
 
 # Inject custom CSS
