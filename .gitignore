@@ -1,5 +1,4 @@
-# Don't track your trained model file
-best.pt
+
 
 # Ignore Python cache files
 __pycache__/
