@@ -4,4 +4,3 @@ pandas>=2.2
 pytz>=2025.2
 # Only add opencv-python-headless if you need a newer version than Colab’s:
 opencv-python-headless>=4.9.0.80
-torch>=2.7.1
