@@ -173,9 +173,9 @@ with col1:
 
             labels = [model.names[int(b.cls)] for b in results[0].boxes]
             if "shark" in labels:
-                st.toast("Shark detected")
+                st.toast("Shark detected 🦈")
             else:
-                st.error("No shark detected.")
+                st.error("No shark detected ℹ️")
 
 with col3:
     st.markdown("**Live webcam feed** with real-time YOLO")
